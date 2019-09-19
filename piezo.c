@@ -7,9 +7,9 @@
 //---------------------------------------------------------------------------------------------------------------------
 
 #define GPIO_PIN_PIEZO (18)
-#define SHORT_PATTERN_DURATION (1000)
-#define LONG_PATTERN_DURATION (50000)
-#define VERY_LONG_PATTERN_DURATION (100000)
+#define SHORT_PATTERN_DURATION (100)
+#define LONG_PATTERN_DURATION (2000)
+#define VERY_LONG_PATTERN_DURATION (4000)
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ static void pwm_write(gpio_t* gpio, int width)
     // Pulse width
     int i;
     for(i=0; i < width; i++) {
-        usleep(10);
+        usleep(1);
     }
 
     // Set low
