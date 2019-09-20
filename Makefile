@@ -1,4 +1,4 @@
 CC=gcc
 
 all:
-	${CC} button.c controller.c  gpio.c  piezo.c -o controller
+	${CC} common.c button.c controller.c  gpio.c  piezo.c adt.c -o controller -lpthread

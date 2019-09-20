@@ -1,4 +1,6 @@
 typedef enum {
+    piezo_indication_idle,
+
     // Rebooting
     piezo_indication_worker_reboot_requested, /* button released within 2s */
     piezo_indication_worker_reboot_confirmed, /* button pressed within 5s after request */
@@ -12,8 +14,10 @@ typedef enum {
     piezo_indication_complete_power_toggle_confirmed, /* button pressed within 5s after request */
 
     // Alarms
-    piezo_indication_warning, /* Functionality degraded */
-    piezo_indication_critical, /* Critical system failure */
+    piezo_indication_warning, /* Functionality degraded. Testable using both buttons released after 4s */
+    piezo_indication_critical, /* Critical system failure. Testable using both button released after 8s */
 } piezo_indication_t;
 
-void play_piezo_indication(piezo_indication_t indication);
+void piezo_add_to_queue(piezo_indication_t indication);
+
+void* piezo_play_thread_main(void* data);

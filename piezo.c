@@ -2,9 +2,9 @@
 
 #include "piezo.h"
 #include "gpio.h"
+#include "adt.h"
 #include <unistd.h>
-
-//---------------------------------------------------------------------------------------------------------------------
+#include <pthread.h>
 
 #define GPIO_PIN_PIEZO (18)
 #define SHORT_PATTERN_DURATION (100)
@@ -13,13 +13,25 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static gpio_t* gpio_piezo = NULL;
+typedef struct _play_entry
+{
+    struct _play_entry* next;
+    piezo_indication_t indication;
+} play_entry_t;
 
 typedef enum {
     repeated_pattern_short,
     repeated_pattern_long,
     repeated_pattern_very_long,
 } repeated_pattern_t;
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static gpio_t* gpio_piezo = NULL;
+
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static play_entry_t* play_queue = NULL;
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -66,10 +78,10 @@ static void play_repeated_pattern(gpio_t* gpio, repeated_pattern_t pattern, int 
 
 //---------------------------------------------------------------------------------------------------------------------
 
-void play_piezo_indication(piezo_indication_t indication)
+static void play_piezo_indication(piezo_indication_t indication)
 {
     if (!gpio_piezo) {
-        gpio_piezo = gpio_create(GPIO_PIN_PIEZO, gpio_direction_output, gpio_active_low_inactive);
+        gpio_piezo = gpio_create(GPIO_PIN_PIEZO, gpio_direction_output, gpio_active_high);
     }
 
     switch (indication) {
@@ -132,7 +144,61 @@ void play_piezo_indication(piezo_indication_t indication)
 
 //---------------------------------------------------------------------------------------------------------------------
 
+static play_entry_t* create_entry(piezo_indication_t indication)
+{
+    play_entry_t* e = calloc(1, sizeof(play_entry_t));
+    if (!e) {
+        return NULL;
+    }
 
+    e->indication = indication;
 
+    return e;
+}
 
+//---------------------------------------------------------------------------------------------------------------------
+
+static void destroy_entry(entry_t* entry) {
+    play_entry_t* e = (play_entry_t*)entry;
+    free(e);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+void piezo_add_to_queue(piezo_indication_t indication)
+{
+    play_entry_t* e = create_entry(indication);
+    if (!e) {
+        return;
+    }
+
+    pthread_mutex_lock(&mutex);
+    adt_queue_push_back((entry_t**)&play_queue, (entry_t*)e);
+    pthread_mutex_unlock(&mutex);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+void* piezo_play_thread_main(void* data)
+{
+    while(true) {
+        // Don't busy loop
+        usleep(50000);
+
+        // Check queue
+        pthread_mutex_lock(&mutex);
+        play_entry_t* e = (play_entry_t*)adt_queue_pop_front((entry_t**)&play_queue);
+        pthread_mutex_unlock(&mutex);
+
+        // Play until completion if entry is found
+        if (e) {
+            play_piezo_indication(e->indication);
+            destroy_entry((entry_t*)e);
+        }
+    }
+
+    return NULL;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 

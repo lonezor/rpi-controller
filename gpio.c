@@ -12,13 +12,13 @@
 struct _gpio_t {
     gpio_pin_t pin;
     gpio_direction_t direction;
-    gpio_active_low_t active_low;
+    gpio_active_t active;
     FILE* value;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
 
-gpio_t* gpio_create(gpio_pin_t pin, gpio_direction_t direction, gpio_active_low_t active_low)
+gpio_t* gpio_create(gpio_pin_t pin, gpio_direction_t direction, gpio_active_t active)
 {
     gpio_t* gpio = calloc(1, sizeof(gpio_t));
     if (!gpio) {
@@ -43,7 +43,7 @@ gpio_t* gpio_create(gpio_pin_t pin, gpio_direction_t direction, gpio_active_low_
 
         // Set active low
         snprintf(cmd, sizeof(cmd), "echo \"%d\" > %s/active_low",
-            active_low == gpio_active_low_active ? 1 : 0, dir);
+            active == gpio_active_high ? 1 : 0, dir);
         system(cmd);
 	}
 
