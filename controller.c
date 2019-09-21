@@ -18,6 +18,7 @@ typedef enum {
     cmd_idle,
     cmd_worker_reboot,
     cmd_complete_reboot,
+    cmd_reset,
 } cmd_t;
 
 
@@ -30,6 +31,12 @@ void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, 
 
     /*** Reboot button ***/
     button_poll_event(btn_reboot, &event_reboot);
+
+    // Ignore event following execution of command
+    if (cmd == cmd_reset) {
+        cmd = cmd_idle;
+        return;
+    }
 
     if (event_reboot.new_event) {
         // Reboot request
@@ -59,7 +66,7 @@ void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, 
                             printf("piezo_indication_worker_reboot_confirmed\n");
                             //piezo_add_to_queue(piezo_indication_worker_reboot_confirmed);
                             *system_state = system_state_worker_rebooting;
-                            cmd = cmd_idle;
+                            cmd = cmd_reset;
                         } else if (cmd == cmd_complete_reboot) {
                             //piezo_add_to_queue(piezo_indication_complete_reboot_confirmed);
                             printf("piezo_indication_complete_reboot_confirmed\n");
