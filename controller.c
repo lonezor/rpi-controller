@@ -24,9 +24,9 @@ typedef enum {
 void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, system_state_t* system_state)
 {
     button_event_t event_reboot;
-    uint64_t reboot_request_ts = 0;
-    uint64_t reboot_confirmed_ts = 0;
-    cmd_t cmd = cmd_idle;
+    static uint64_t reboot_request_ts = 0;
+    static uint64_t reboot_confirmed_ts = 0;
+    static cmd_t cmd = cmd_idle;
 
     /*** Reboot button ***/
     button_poll_event(btn_reboot, &event_reboot);
@@ -36,14 +36,16 @@ void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, 
         if (event_reboot.state == button_state_released && 
             event_reboot.prev_state_duration != 0) {
             reboot_request_ts = monotonic_ts();
-            if (event_reboot.prev_state_duration <= 2000000) {
-                cmd = cmd_worker_reboot;
-                printf("piezo_indication_worker_reboot_requested\n");
-                //piezo_add_to_queue(piezo_indication_worker_reboot_requested);
-            } else {
-                cmd = cmd_complete_reboot;
-                printf("piezo_indication_complete_reboot_requested\n");
-                //piezo_add_to_queue(piezo_indication_complete_reboot_requested);
+            if (cmd == cmd_idle) {
+                if (event_reboot.prev_state_duration <= 2000000) {
+                    cmd = cmd_worker_reboot;
+                    printf("piezo_indication_worker_reboot_requested\n");
+                    //piezo_add_to_queue(piezo_indication_worker_reboot_requested);
+                } else {
+                    cmd = cmd_complete_reboot;
+                    printf("piezo_indication_complete_reboot_requested\n");
+                    //piezo_add_to_queue(piezo_indication_complete_reboot_requested);
+                }
             }
         }
             
@@ -57,6 +59,7 @@ void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, 
                             printf("piezo_indication_worker_reboot_confirmed\n");
                             //piezo_add_to_queue(piezo_indication_worker_reboot_confirmed);
                             *system_state = system_state_worker_rebooting;
+                            cmd = cmd_idle;
                         } else if (cmd == cmd_complete_reboot) {
                             //piezo_add_to_queue(piezo_indication_complete_reboot_confirmed);
                             printf("piezo_indication_complete_reboot_confirmed\n");
