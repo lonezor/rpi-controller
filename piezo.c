@@ -100,12 +100,12 @@ static void play_piezo_indication(piezo_indication_t indication)
             play_repeated_pattern(gpio_piezo, repeated_pattern_very_long, 1);
             break;
         case piezo_indication_complete_reboot_requested:
-            /* . . . . . . . . . . . . */
-            play_repeated_pattern(gpio_piezo, repeated_pattern_short, 12);
+            /* . . . . . . */
+            play_repeated_pattern(gpio_piezo, repeated_pattern_short, 6);
             break;
         case piezo_indication_complete_reboot_confirmed:
-            /* . . . . . . . . . . . . ________ */
-            play_repeated_pattern(gpio_piezo, repeated_pattern_short, 12);
+            /* . . . . . . ________ */
+            play_repeated_pattern(gpio_piezo, repeated_pattern_short, 6);
             play_repeated_pattern(gpio_piezo, repeated_pattern_very_long, 1);
             break;
 
@@ -120,12 +120,12 @@ static void play_piezo_indication(piezo_indication_t indication)
             play_repeated_pattern(gpio_piezo, repeated_pattern_very_long, 1);
             break;
         case piezo_indication_complete_power_toggle_requested:
-            /* ___ ___ ___ ___ ___ */
-            play_repeated_pattern(gpio_piezo, repeated_pattern_long, 5);
+            /* ___ ___ ___ ___ ___ ___ */
+            play_repeated_pattern(gpio_piezo, repeated_pattern_long, 6);
             break;
         case piezo_indication_complete_power_toggle_confirmed:
-            /* ___ ___ ___ ___ ___ ________*/
-            play_repeated_pattern(gpio_piezo, repeated_pattern_long, 5);
+            /* ___ ___ ___ ___ ___ ___ ________*/
+            play_repeated_pattern(gpio_piezo, repeated_pattern_long, 6);
             play_repeated_pattern(gpio_piezo, repeated_pattern_very_long, 1);
             break;
 
