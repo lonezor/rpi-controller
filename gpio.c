@@ -49,7 +49,7 @@ gpio_t* gpio_create(gpio_pin_t pin, gpio_direction_t direction, gpio_active_t ac
 
     char value_path[512];
     snprintf(value_path, sizeof(value_path), "%s/value", dir);
-    gpio->value = fopen(value_path, "w");
+    gpio->value = fopen(value_path, direction == gpio_direction_input ? "r" : "w");
     if (!gpio->value) {
         free(gpio);
         return NULL;
@@ -88,8 +88,9 @@ void gpio_set(gpio_t* gpio, bool value)
 
 bool gpio_get(gpio_t* gpio)
 {
-    char buffer[2] = {0,0};
-    fread(buffer, sizeof(buffer), 0, gpio->value);
+    char buffer [80];
+    rewind(gpio->value);
+    fscanf(gpio->value, "%s", buffer);
     return (strstr(buffer, "1") != NULL);
 }
 

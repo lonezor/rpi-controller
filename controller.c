@@ -55,10 +55,12 @@ int main(int argc, char* argv[]) {
                     reboot_request_ts = monotonic_ts();
                     if (event_reboot.prev_state_duration <= 2000000) {
                         reboot_cmd = system_cmd_worker_reboot;
-                        piezo_add_to_queue(piezo_indication_worker_reboot_requested);
+                        printf("piezo_indication_worker_reboot_requested\n");
+                        //piezo_add_to_queue(piezo_indication_worker_reboot_requested);
                     } else {
                         reboot_cmd = system_cmd_complete_reboot;
-                        piezo_add_to_queue(piezo_indication_complete_reboot_requested);
+                        printf("piezo_indication_complete_reboot_requested\n");
+                        //piezo_add_to_queue(piezo_indication_complete_reboot_requested);
                     }                 
                 }
             
@@ -69,9 +71,11 @@ int main(int argc, char* argv[]) {
                     if (reboot_request_ts != 0) {
                         if ((reboot_confirmed_ts - reboot_request_ts) < 5000000) {
                             if (reboot_cmd == system_cmd_worker_reboot) {
-                                piezo_add_to_queue(piezo_indication_worker_reboot_confirmed);
+                                printf("piezo_indication_worker_reboot_confirmed\n");
+                                //piezo_add_to_queue(piezo_indication_worker_reboot_confirmed);
                             } else if (reboot_cmd == system_cmd_complete_reboot) {
-                                piezo_add_to_queue(piezo_indication_complete_reboot_confirmed);
+                                //piezo_add_to_queue(piezo_indication_complete_reboot_confirmed);
+                                printf("piezo_indication_complete_reboot_confirmed\n");
                             }
                         }
                     }
