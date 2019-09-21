@@ -1,5 +1,5 @@
 typedef enum {
-    piezo_indication_idle,
+    piezo_indication_idle, // no sound
 
     // Rebooting
     piezo_indication_worker_reboot_requested, /* button released within 2s */

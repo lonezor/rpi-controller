@@ -10,9 +10,9 @@ typedef enum {
 } gpio_direction_t;
 
 typedef enum {
-    gpio_active_high,
-    gpio_active_low,
-} gpio_active_t;
+    gpio_active_low_enabled,
+    gpio_active_low_disabled,
+} gpio_active_low_t;
 
 
 typedef uint8_t gpio_pin_t;
@@ -21,7 +21,7 @@ typedef struct _gpio_t gpio_t;
 
 //---------------------------------------------------------------------------------------------------------------------
 
-gpio_t* gpio_create(gpio_pin_t pin, gpio_direction_t direction, gpio_active_t active);
+gpio_t* gpio_create(gpio_pin_t pin, gpio_direction_t direction, gpio_active_low_t active_low);
 
 void gpio_destroy(gpio_t* gpio);
 

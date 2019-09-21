@@ -40,35 +40,35 @@ void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, 
 
     if (event_reboot.new_event) {
         // Reboot request
-        if (event_reboot.state == button_state_released && 
+        if (event_reboot.state == button_state_released &&
             event_reboot.prev_state_duration != 0) {
             reboot_request_ts = monotonic_ts();
             if (cmd == cmd_idle) {
                 if (event_reboot.prev_state_duration <= 2000000) {
                     cmd = cmd_worker_reboot;
                     printf("piezo_indication_worker_reboot_requested\n");
-                    //piezo_add_to_queue(piezo_indication_worker_reboot_requested);
+                    piezo_add_to_queue(piezo_indication_worker_reboot_requested);
                 } else {
                     cmd = cmd_complete_reboot;
                     printf("piezo_indication_complete_reboot_requested\n");
-                    //piezo_add_to_queue(piezo_indication_complete_reboot_requested);
+                    piezo_add_to_queue(piezo_indication_complete_reboot_requested);
                 }
             }
         }
             
         // Reboot confirmation
-        if (event_reboot.state == button_state_pressed && 
+        if (event_reboot.state == button_state_pressed &&
             event_reboot.prev_state_duration != 0) {
                 reboot_confirmed_ts = monotonic_ts();
                 if (reboot_request_ts != 0) {
                     if ((reboot_confirmed_ts - reboot_request_ts) < 5000000) {
                         if (cmd == cmd_worker_reboot) {
                             printf("piezo_indication_worker_reboot_confirmed\n");
-                            //piezo_add_to_queue(piezo_indication_worker_reboot_confirmed);
+                            piezo_add_to_queue(piezo_indication_worker_reboot_confirmed);
                             *system_state = system_state_worker_rebooting;
                             cmd = cmd_reset;
                         } else if (cmd == cmd_complete_reboot) {
-                            //piezo_add_to_queue(piezo_indication_complete_reboot_confirmed);
+                            piezo_add_to_queue(piezo_indication_complete_reboot_confirmed);
                             printf("piezo_indication_complete_reboot_confirmed\n");
                         }
                     } else {
@@ -81,6 +81,7 @@ void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, 
 
 
 int main(int argc, char* argv[]) {
+    system_state_t system_state = system_state_idle;
 
     // Init buttons
     button_t* btn_reboot = button_create(button_type_reboot);
@@ -97,7 +98,8 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    system_state_t system_state = system_state_idle;
+    // Ensure silent piezo at startup
+    piezo_add_to_queue(piezo_indication_idle);
 
     while(true) {
         switch(system_state) {

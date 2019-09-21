@@ -82,10 +82,13 @@ static void play_repeated_pattern(gpio_t* gpio, repeated_pattern_t pattern, int 
 static void play_piezo_indication(piezo_indication_t indication)
 {
     if (!gpio_piezo) {
-        gpio_piezo = gpio_create(GPIO_PIN_PIEZO, gpio_direction_output, gpio_active_high);
+        gpio_piezo = gpio_create(GPIO_PIN_PIEZO, gpio_direction_output, gpio_active_low_disabled);
     }
 
     switch (indication) {
+        case piezo_indication_idle:
+            gpio_set(gpio_piezo, false);
+            break;
         // Reboot
         case piezo_indication_worker_reboot_requested:
             /* . . . */
