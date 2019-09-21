@@ -217,6 +217,8 @@ int main(int argc, char* argv[]) {
                 system_state = system_state_idle;
                 break;
             case system_state_power_toggle:
+                sleep(1);
+                system_state = system_state_idle;
                 break;
         }
 
