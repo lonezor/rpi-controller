@@ -33,11 +33,11 @@ button_t* button_create(button_type_t type)
 
     switch (type) {
         case button_type_reboot:
-            b->gpio = gpio_create(GPIO_PIN_BUTTON_REBOOT, gpio_direction_input, gpio_active_low_disabled);
+            b->gpio = gpio_create(GPIO_PIN_BUTTON_REBOOT, gpio_direction_input, gpio_active_low_enabled);
             break;
 
         case button_type_power_toggle:
-            b->gpio = gpio_create(GPIO_PIN_BUTTON_POWER_TOGGLE, gpio_direction_input, gpio_active_low_disabled);
+            b->gpio = gpio_create(GPIO_PIN_BUTTON_POWER_TOGGLE, gpio_direction_input, gpio_active_low_enabled);
             break;
     }
 

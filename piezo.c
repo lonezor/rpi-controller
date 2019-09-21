@@ -100,12 +100,12 @@ static void play_piezo_indication(piezo_indication_t indication)
             play_repeated_pattern(gpio_piezo, repeated_pattern_very_long, 1);
             break;
         case piezo_indication_complete_reboot_requested:
-            /* . . . . . */
-            play_repeated_pattern(gpio_piezo, repeated_pattern_short, 5);
+            /* . . . . . . . . . . . . */
+            play_repeated_pattern(gpio_piezo, repeated_pattern_short, 12);
             break;
         case piezo_indication_complete_reboot_confirmed:
-            /* . . . . . ________ */
-            play_repeated_pattern(gpio_piezo, repeated_pattern_short, 5);
+            /* . . . . . . . . . . . . ________ */
+            play_repeated_pattern(gpio_piezo, repeated_pattern_short, 12);
             play_repeated_pattern(gpio_piezo, repeated_pattern_very_long, 1);
             break;
 
@@ -183,20 +183,37 @@ void piezo_add_to_queue(piezo_indication_t indication)
 
 //---------------------------------------------------------------------------------------------------------------------
 
+bool piezo_empty_queue()
+{
+    pthread_mutex_lock(&mutex);
+    bool empty_queue = (play_queue == NULL);
+    pthread_mutex_unlock(&mutex);
+
+    return empty_queue;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
 void* piezo_play_thread_main(void* data)
 {
     while(true) {
         // Don't busy loop
         usleep(50000);
 
-        // Check queue
+        // Peek queue
         pthread_mutex_lock(&mutex);
-        play_entry_t* e = (play_entry_t*)adt_queue_pop_front((entry_t**)&play_queue);
+        play_entry_t* e = (play_entry_t*)adt_queue_peek_front((const entry_t*)play_queue);
         pthread_mutex_unlock(&mutex);
 
         // Play until completion if entry is found
         if (e) {
             play_piezo_indication(e->indication);
+
+            // Remove entry from queue to mark that it is fully processed
+            pthread_mutex_lock(&mutex);
+            e = (play_entry_t*)adt_queue_pop_front((entry_t**)&play_queue);
+            pthread_mutex_unlock(&mutex);
+
             destroy_entry((entry_t*)e);
         }
     }
