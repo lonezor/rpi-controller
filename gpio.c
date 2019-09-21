@@ -90,7 +90,7 @@ bool gpio_get(gpio_t* gpio)
 {
     char buffer [80];
     rewind(gpio->value);
-    fscanf(gpio->value, "%s", buffer);
+    fscanf(gpio->value, "%s\n", buffer);
     return (strstr(buffer, "1") != NULL);
 }
 
