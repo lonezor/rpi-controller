@@ -5,6 +5,7 @@
 #include "adt.h"
 #include <unistd.h>
 #include <pthread.h>
+#include <stdio.h>
 
 #define GPIO_PIN_PIEZO (18)
 #define SHORT_PATTERN_DURATION (100)

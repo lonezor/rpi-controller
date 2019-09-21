@@ -25,28 +25,30 @@ gpio_t* gpio_create(gpio_pin_t pin, gpio_direction_t direction, gpio_active_t ac
         return NULL;
     }
 
+    struct stat buf;
     char dir[512];
+    char cmd[512];
+
     snprintf(dir, sizeof(dir), "/sys/class/gpio/gpio%d", (int)pin);
 
-    struct stat buf;
+    // Make pin available in file system
     if (stat(dir, &buf) != 0) {
-        char cmd[512];
-        
-        // Make pin available in file system
+
         snprintf(cmd, sizeof(cmd), "echo \"%d\" > /sys/class/gpio/export", (int)pin);
         system(cmd);
+    }
 
-        // Set direction
-        snprintf(cmd, sizeof(cmd), "echo \"%s\" > %s/direction",
+    // Set direction
+    snprintf(cmd, sizeof(cmd), "echo \"%s\" > %s/direction",
                     direction == gpio_direction_input ? "in" : "out", dir);
-        system(cmd);
+    system(cmd);
 
-        // Set active low
-        snprintf(cmd, sizeof(cmd), "echo \"%d\" > %s/active_low",
+    // Set active low
+    snprintf(cmd, sizeof(cmd), "echo \"%d\" > %s/active_low",
             active == gpio_active_high ? 1 : 0, dir);
-        system(cmd);
-	}
+    system(cmd);
 
+    // Open value file
     char value_path[512];
     snprintf(value_path, sizeof(value_path), "%s/value", dir);
     gpio->value = fopen(value_path, direction == gpio_direction_input ? "r" : "w");

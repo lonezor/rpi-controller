@@ -71,6 +71,8 @@ void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, 
                             //piezo_add_to_queue(piezo_indication_complete_reboot_confirmed);
                             printf("piezo_indication_complete_reboot_confirmed\n");
                         }
+                    } else {
+                        cmd = cmd_idle;
                     }
                 }
         }
