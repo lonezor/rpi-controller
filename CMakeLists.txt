@@ -38,6 +38,8 @@ target_link_libraries(pwr_ctrl
     pthread
 )
 
+install(TARGETS relay_ctrl DESTINATION /sbin)
+install(TARGETS pwr_ctrl DESTINATION /sbin)
 
 
 

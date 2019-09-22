@@ -36,16 +36,16 @@ int main(int argc, char* argv[]) {
         pin = GPIO_PIN_FAN_UPPER_FRONT;
     } else if (strstr(argv[1], "fan_lower_front")) {
         pin = GPIO_PIN_FAN_LOWER_FRONT;
-    } else if (strstr(argv[1], "relay_channel_fan_rear")) {
+    } else if (strstr(argv[1], "fan_rear")) {
         pin = GPIO_PIN_FAN_REAR;
-    } else if (strstr(argv[1], "relay_channel_fan_top")) {
+    } else if (strstr(argv[1], "fan_top")) {
         pin = GPIO_PIN_FAN_TOP;
-    } else if (strstr(argv[1], "relay_channel_worker_01")) {
-        pin = GPIO_PIN_FAN_TOP;
+    } else if (strstr(argv[1], "worker_01")) {
+        pin = GPIO_PIN_WORKER_01;
     }
 
     if (pin != -1) {
-        gpio_t* gpio = gpio_create(GPIO_PIN_FAN_UPPER_FRONT, gpio_direction_output, gpio_active_low_enabled);
+        gpio_t* gpio = gpio_create(pin, gpio_direction_output, gpio_active_low_enabled);
         if (gpio) {
             gpio_set(gpio, enabled);
             gpio_destroy(gpio, false);

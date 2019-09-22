@@ -73,12 +73,14 @@ void gpio_destroy(gpio_t* gpio, bool unexport)
     }
 
     fclose(gpio->value);
-        
+
     // Remove pin from file system
-    char cmd[512];
-    snprintf(cmd, sizeof(cmd), "echo \"%d\" > /sys/class/gpio/unexport", (int)gpio->pin);
-    system(cmd);
-    
+    if (unexport) {
+        char cmd[512];
+        snprintf(cmd, sizeof(cmd), "echo \"%d\" > /sys/class/gpio/unexport", (int)gpio->pin);
+        system(cmd);
+    }
+
     free(gpio);
 }
 
