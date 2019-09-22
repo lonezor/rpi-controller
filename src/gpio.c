@@ -66,7 +66,7 @@ gpio_t* gpio_create(gpio_pin_t pin, gpio_direction_t direction, gpio_active_low_
 
 //---------------------------------------------------------------------------------------------------------------------
 
-void gpio_destroy(gpio_t* gpio)
+void gpio_destroy(gpio_t* gpio, bool unexport)
 {
     if (!gpio) {
         return;

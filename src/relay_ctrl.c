@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
         gpio_t* gpio = gpio_create(GPIO_PIN_FAN_UPPER_FRONT, gpio_direction_output, gpio_active_low_enabled);
         if (gpio) {
             gpio_set(gpio, enabled);
-            gpio_destroy(gpio);
+            gpio_destroy(gpio, false);
         }
     } else {
         printf("Unknown command\n");

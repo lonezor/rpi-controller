@@ -52,7 +52,7 @@ void button_destroy(button_t* btn)
         return;
     }
 
-    gpio_destroy(btn->gpio);
+    gpio_destroy(btn->gpio, true);
     free(btn);
 }
 
