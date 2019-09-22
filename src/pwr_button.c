@@ -1,13 +1,13 @@
 
 
 #include "common.h"
-#include "button.h"
 #include "gpio.h"
+#include "pwr_button.h"
 #include <assert.h>
-#include <stdio.h>
 #include <stdint.h>
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define GPIO_PIN_BUTTON_REBOOT (5)
 #define GPIO_PIN_BUTTON_POWER_TOGGLE (6)

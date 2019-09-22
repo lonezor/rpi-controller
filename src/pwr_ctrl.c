@@ -1,13 +1,13 @@
-#include <stdio.h>
+#include "common.h"
+#include "piezo.h"
+#include "pwr_button.h"
+#include <pthread.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <time.h>
-#include "piezo.h"
-#include "button.h"
-#include "common.h"
-#include <unistd.h>
-#include <pthread.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
 
 //------------------------------------------------------------------------------------------------------------------------
 

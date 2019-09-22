@@ -1,2 +1,8 @@
 controller
 .vscode
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+libcommon.a
+pwr_ctrl
+relay_ctrl
