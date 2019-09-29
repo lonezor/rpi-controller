@@ -14,8 +14,6 @@ double get_temperature(const char* path)
 
     double temp = (double)value / (double)1000;
 
-    printf("temperature %f\n", temp);
-
     fclose(f);
 
     return temp;

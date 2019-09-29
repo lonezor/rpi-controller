@@ -189,7 +189,7 @@ void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, 
     handle_button_power_toggle(btn_power_toggle, system_state);
 
     // Fan control state
-    if (get_temperature(RASP_PI_CORE_TEMP_PATH) < 60) {
+    if (get_temperature(RASP_PI_CORE_TEMP_PATH) <= 57) {
         if (fan_top || fan_rear) {
             system("/sbin/relay_ctrl fan_top off");
             system("/sbin/relay_ctrl fan_rear off");
@@ -198,14 +198,14 @@ void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, 
         }
     }
 
-    else if (get_temperature(RASP_PI_CORE_TEMP_PATH) > 65) {
+    else if (get_temperature(RASP_PI_CORE_TEMP_PATH) >= 62) {
         if (!fan_top) {
             system("/sbin/relay_ctrl fan_top on");
             fan_top = true;
         }
     }
 
-    else if (get_temperature(RASP_PI_CORE_TEMP_PATH) > 70) {
+    else if (get_temperature(RASP_PI_CORE_TEMP_PATH) >= 67) {
         if (!fan_rear) {
             system("/sbin/relay_ctrl fan_rear on");
             fan_rear = true;
