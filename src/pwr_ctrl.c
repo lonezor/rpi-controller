@@ -38,7 +38,7 @@ void handle_complete_reboot()
 
   // ssh worker "reboot"
 
-  // "reboot"
+  system("reboot");
   exit(0);
 }
 
@@ -53,7 +53,7 @@ void handle_complete_power_toggle()
 
   // ssh worker "halt"
 
-  // "halt"
+  system("halt");
   exit(0);
 }
 
