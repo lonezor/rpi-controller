@@ -1,6 +1,7 @@
 #include "common.h"
 #include "piezo.h"
 #include "pwr_button.h"
+#include "temperature.h"
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -178,10 +179,38 @@ void handle_button_power_toggle(button_t* btn_power_toggle, system_state_t* syst
 
 //------------------------------------------------------------------------------------------------------------------------
 
+static bool fan_top = false;
+static bool fan_rear = false;
+
 void handle_system_state_idle(button_t* btn_reboot, button_t* btn_power_toggle, system_state_t* system_state)
 {
+    // Button state
     handle_button_reboot(btn_reboot, system_state);
     handle_button_power_toggle(btn_power_toggle, system_state);
+
+    // Fan control state
+    if (get_temperature(RASP_PI_CORE_TEMP_PATH) < 60) {
+        if (fan_top || fan_rear) {
+            system("/sbin/relay_ctrl fan_top off");
+            system("/sbin/relay_ctrl fan_rear off");
+            fan_top = false;
+            fan_rear = false;
+        }
+    }
+
+    else if (get_temperature(RASP_PI_CORE_TEMP_PATH) > 65) {
+        if (!fan_top) {
+            system("/sbin/relay_ctrl fan_top on");
+            fan_top = true;
+        }
+    }
+
+    else if (get_temperature(RASP_PI_CORE_TEMP_PATH) > 70) {
+        if (!fan_rear) {
+            system("/sbin/relay_ctrl fan_rear on");
+            fan_rear = true;
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

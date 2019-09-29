@@ -17,6 +17,7 @@ add_executable(pwr_ctrl
     src/pwr_button.c
     src/pwr_ctrl.c
     src/piezo.c
+    src/temperature.c
 )
 
 add_executable(relay_ctrl

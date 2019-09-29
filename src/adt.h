@@ -30,3 +30,6 @@ adt_queue_pop_front(entry_t** head); // remove entry from queue
 void
 adt_queue_destroy(entry_t** head, adt_common_destroy_fn destroy_fn);
 
+//---------------------------------------------------------------------------------------------------------------------
+
+

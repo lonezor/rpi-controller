@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+//---------------------------------------------------------------------------------------------------------------------
+
 typedef enum
 {
     button_type_none = 0x0,
@@ -26,6 +28,8 @@ typedef struct
 
 typedef struct _button_t button_t;
 
+//---------------------------------------------------------------------------------------------------------------------
+
 button_t* button_create(button_type_t type);
 
 void button_destroy(button_t* btn);
@@ -34,7 +38,5 @@ button_state_t button_state(button_t* btn);
 
 void button_poll_event(button_t* btn, button_event_t* event);
 
-
-
-
+//---------------------------------------------------------------------------------------------------------------------
 

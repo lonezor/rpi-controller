@@ -2,6 +2,8 @@
 
 #include <stdbool.h>
 
+//---------------------------------------------------------------------------------------------------------------------
+
 typedef enum {
     piezo_indication_idle, // no sound
 
@@ -22,8 +24,12 @@ typedef enum {
     piezo_indication_critical, /* Critical system failure. Testable using both button released after 8s */
 } piezo_indication_t;
 
+//---------------------------------------------------------------------------------------------------------------------
+
 void piezo_add_to_queue(piezo_indication_t indication);
 
 bool piezo_empty_queue();
 
 void* piezo_play_thread_main(void* data);
+
+//---------------------------------------------------------------------------------------------------------------------
